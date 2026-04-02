@@ -112,6 +112,73 @@ class RoomInventory {
 }
 
 // =====================================================
+// CLASS - RoomSearchService
+// =====================================================
+/**
+ * =====================================================
+ * CLASS - RoomSearchService
+ * =====================================================
+ *
+ * Use Case 4: Room Search & Availability Check
+ *
+ * Description:
+ * This class provides search functionality
+ * for guests to view available rooms.
+ *
+ * It reads room availability from inventory
+ * and room details from Room objects.
+ *
+ * No inventory mutation or booking logic
+ * is performed in this class.
+ *
+ * @version 4.0
+ */
+class RoomSearchService {
+
+    /**
+     * Displays available rooms along with
+     * their details and pricing.
+     *
+     * This method performs read-only access
+     * to inventory and room data.
+     *
+     * @param inventory   centralized room inventory
+     * @param singleRoom  single room definition
+     * @param doubleRoom  double room definition
+     * @param suiteRoom   suite room definition
+     */
+    public void searchAvailableRooms(
+            RoomInventory inventory,
+            Room singleRoom,
+            Room doubleRoom,
+            Room suiteRoom) {
+
+        Map<String, Integer> availability = inventory.getRoomAvailability();
+
+        // Check and display Single Room availability
+        if (availability.get("Single") > 0) {
+            System.out.println("\nSingle Room:");
+            singleRoom.displayRoomDetails();
+            System.out.println("Available: " + availability.get("Single"));
+        }
+
+        // Check and display Double Room availability
+        if (availability.get("Double") > 0) {
+            System.out.println("\nDouble Room:");
+            doubleRoom.displayRoomDetails();
+            System.out.println("Available: " + availability.get("Double"));
+        }
+
+        // Check and display Suite Room availability
+        if (availability.get("Suite") > 0) {
+            System.out.println("\nSuite Room:");
+            suiteRoom.displayRoomDetails();
+            System.out.println("Available: " + availability.get("Suite"));
+        }
+    }
+}
+
+// =====================================================
 // MAIN CLASS - BookMyStayApp
 // =====================================================
 /**
@@ -119,18 +186,17 @@ class RoomInventory {
  * MAIN CLASS - BookMyStayApp
  * =====================================================
  *
- * Use Case 3: Centralized Room Inventory Management
+ * Use Case 4: Room Search & Availability Check
  *
  * Description:
- * This class demonstrates how room availability
- * is managed using a centralized inventory.
+ * This class demonstrates how guests
+ * can view available rooms without
+ * modifying inventory data.
  *
- * Room objects are used to retrieve pricing
- * and room characteristics.
+ * The system enforces read-only access
+ * by design and usage discipline.
  *
- * No booking or search logic is introduced here.
- *
- * @version 3.1
+ * @version 4.0
  */
 public class BookMyStayApp {
 
@@ -148,20 +214,12 @@ public class BookMyStayApp {
 
         // Centralized inventory
         RoomInventory inventory = new RoomInventory();
-        Map<String, Integer> availability = inventory.getRoomAvailability();
 
-        System.out.println("Hotel Room Inventory Status");
+        // Search service
+        RoomSearchService searchService = new RoomSearchService();
 
-        System.out.println("\nSingle Room:");
-        single.displayRoomDetails();
-        System.out.println("Available Rooms: " + availability.get("Single"));
+        System.out.println("Room Search");
 
-        System.out.println("\nDouble Room:");
-        doubleRoom.displayRoomDetails();
-        System.out.println("Available Rooms: " + availability.get("Double"));
-
-        System.out.println("\nSuite Room:");
-        suite.displayRoomDetails();
-        System.out.println("Available Rooms: " + availability.get("Suite"));
+        searchService.searchAvailableRooms(inventory, single, doubleRoom, suite);
     }
 }
